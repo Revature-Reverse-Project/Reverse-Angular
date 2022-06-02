@@ -6,6 +6,21 @@ pipeline {
   }
   agent any
   stages {
+    stage('Quality Gate') {
+        when {
+            anyOf {branch 'ft_*'; branch 'bg_*'}
+        }
+        steps {
+            container('SonarQubeScanner') {
+                withSonarQubeEnv('SonarQube') {
+                    sh //path-to-sonar-scanner
+                }
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
     stage('Unit Testing') {
         when {
             anyOf {branch 'ft_*'; branch 'bg_*'}
@@ -29,7 +44,7 @@ pipeline {
             // TO UPDATE - NOT MAVEN
             // withMaven {
             //     sh 'mvn package -DskipTests'
-            // }  
+            // }
         }
     }
     stage('Docker Image') {
