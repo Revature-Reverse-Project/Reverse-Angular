@@ -6,6 +6,30 @@ pipeline {
   }
   agent any
   stages {
+      stage ('Angular - Sonar Scanner'){
+          steps {
+              withSonarQubeEnv('sonarqube-p3-test') {
+                  //Run sonar-scanner cli docker image and check with sonar plugin
+                  sh "cd Reverse-Angular; docker run \
+                  --rm \
+                  -v `pwd`:/usr/src \
+                  sonarsource/sonar-scanner-cli \
+                  sonar-scanner \
+                  -Dsonar.host.url=${SONAR_HOST_URL} \
+                  -Dsonar.login=${SONAR_AUTH_TOKEN} \
+                  -Dsonar.projectKey=${SONAR_ANGULAR_PROJECT_KEY} \
+                  -Dsonar.scm.exclusions.disabled=true \
+                  -Dsonar.scm.disabled=True"
+              }
+          }
+      }
+      stage("Angular - Quality Gate") {
+          steps {
+              timeout(time: 1, unit: 'HOURS') {
+                  waitForQualityGate abortPipeline: true, webhookSecretId: 'sonar-angular-webhook'
+              }
+          }
+      }
     stage('Install') {
         when {
             anyOf {branch 'ft_*'; branch 'bg_*'; branch 'master'}
