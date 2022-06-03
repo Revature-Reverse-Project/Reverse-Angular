@@ -5,7 +5,7 @@ pipeline {
     dockerImage = '' // TO UPDATE - Using Google Artifact Registry API
   }
   agent any
-  stages {
+    stages {
       stage ('Angular - Sonar Scanner'){
           steps {
               withSonarQubeEnv('sonarqube-p3-test') {
@@ -36,7 +36,7 @@ pipeline {
         }
         steps {
             echo 'Install stage'
-            sh 'npm install'
+            sh 'npm install --force'
         }
     }
     stage('Unit Testing') {
