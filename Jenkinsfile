@@ -3,24 +3,43 @@ pipeline {
     registry = '' // TO UPDATE - Using Google Artifact Registry API
     dockerHubCreds = 'docker_hub' // TO CHANGE - Using Google Artifact Registry API
     dockerImage = '' // TO UPDATE - Using Google Artifact Registry API
+    scannerHome = tool 'SonarQubeScanner'
   }
+//       scannerHome = tool 'SonarQubeScanner'
+//     }
+//     agent any
+//       stages {
+//         stage('Code Analysis') {
+//           steps {
+//             withSonarQubeEnv('SonarCloud') {
+//               sh "${scannerHome}/bin/sonar-scanner"
+//             }
+//           }
+//         }
   agent any
   stages {
     // stage('Install') {
     //     when {
     //         anyOf {branch 'ft_*'; branch 'bg_*'; branch 'master'}
     //     }
-    //     steps { 
+    //     steps {
     //         echo 'Install stage'
     //         sh 'npm install --force'
     //     }
     // }
+    stage('Code Analysis') {
+      steps {
+        withSonarQubeEnv('SonarCloud') {
+          sh "${scannerHome}/bin/sonar-scanner"
+        }
+      }
+    }
     stage('Unit Testing') {
         when {
             anyOf {branch 'ft_*'; branch 'bg_*'}
         }
         steps {
-            echo 'Unit Testing stage' 
+            echo 'Unit Testing stage'
             // TO UPDATE - NOT MAVEN, TESTING?
             // withMaven {
             //     sh 'mvn test'
@@ -39,7 +58,7 @@ pipeline {
     //         // TO UPDATE - NOT MAVEN
     //         // withMaven {
     //         //     sh 'mvn package -DskipTests'
-    //         // }  
+    //         // }
     //     }
     // }
     stage('Docker Image') {
