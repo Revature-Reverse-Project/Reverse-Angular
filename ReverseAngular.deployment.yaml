@@ -4,7 +4,7 @@ metadata:
   name: reverse-angular
   labels:
     app: reverse-angular
-    tier: backend
+    tier: frontend
 spec:
   replicas: 1
   selector:
@@ -14,7 +14,7 @@ spec:
     metadata:
       labels:
         app: reverse-angular
-        tier: backend
+        tier: frontend
     spec:
       containers:
         - name: reverse-angular
