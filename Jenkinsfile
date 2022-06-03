@@ -3,7 +3,7 @@ pipeline {
     registry = '' // TO UPDATE - Using Google Artifact Registry API
     dockerHubCreds = 'docker_hub' // TO CHANGE - Using Google Artifact Registry API
     dockerImage = '' // TO UPDATE - Using Google Artifact Registry API
-    scannerHome = tool 'SonarScanner'
+    scannerHome = tool 'SonarQubeScanner'
   }
   agent any
     stages {
