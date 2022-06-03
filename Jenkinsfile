@@ -6,15 +6,15 @@ pipeline {
   }
   agent any
   stages {
-    stage('Install') {
-        when {
-            anyOf {branch 'ft_*'; branch 'bg_*'; branch 'master'}
-        }
-        steps { 
-            echo 'Install stage'
-            sh 'npm install --force'
-        }
-    }
+    // stage('Install') {
+    //     when {
+    //         anyOf {branch 'ft_*'; branch 'bg_*'; branch 'master'}
+    //     }
+    //     steps { 
+    //         echo 'Install stage'
+    //         sh 'npm install --force'
+    //     }
+    // }
     stage('Unit Testing') {
         when {
             anyOf {branch 'ft_*'; branch 'bg_*'}
@@ -28,20 +28,20 @@ pipeline {
             // junit skipPublishingChecks: true, testResults: 'target/surefire-reports/*.xml'
         }
     }
-    stage('Build') {
-        when {
-            // branch 'master'
-            // branch 'ft_jenkins'
-            branch 'ft_*'
-        }
-        steps{
-            echo 'Build stage'
-            // TO UPDATE - NOT MAVEN
-            // withMaven {
-            //     sh 'mvn package -DskipTests'
-            // }  
-        }
-    }
+    // stage('Build') {
+    //     when {
+    //         // branch 'master'
+    //         // branch 'ft_jenkins'
+    //         branch 'ft_*'
+    //     }
+    //     steps{
+    //         echo 'Build stage'
+    //         // TO UPDATE - NOT MAVEN
+    //         // withMaven {
+    //         //     sh 'mvn package -DskipTests'
+    //         // }  
+    //     }
+    // }
     stage('Docker Image') {
         when {
             // branch 'master'
