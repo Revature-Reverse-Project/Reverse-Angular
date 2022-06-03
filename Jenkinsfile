@@ -8,8 +8,10 @@ pipeline {
   agent any
     stages {
       stage('Code Analysis') {
-        withSonarQubeEnv('SonarCloud') {
-          sh "${scannerHome}/bin/sonar-scanner"
+        steps {
+          withSonarQubeEnv('SonarCloud') {
+            sh "${scannerHome}/bin/sonar-scanner"
+          }
         }
       }
 
