@@ -18,8 +18,8 @@ spec:
     spec:
       containers:
         - name: reverse-angular
-          image: us-central1-docker.pkg.dev/devopssre-346918/project-3/project3
-          imagePullPolicy: Always
+          image: reverse-angular
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
           livenessProbe:
