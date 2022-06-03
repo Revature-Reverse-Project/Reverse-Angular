@@ -12,7 +12,7 @@ pipeline {
         }
         steps { 
             echo 'Install stage'
-            sh 'npm install'
+            sh 'npm install --force'
         }
     }
     stage('Unit Testing') {
