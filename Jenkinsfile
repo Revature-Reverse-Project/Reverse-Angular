@@ -21,7 +21,6 @@ pipeline {
         withSonarQubeEnv('SonarCloud') {
           sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=reverse-angular -Dsonar.organization=revature-reverse-project"
         }
-      }
     }
     stage('Unit Testing') {
         when {
