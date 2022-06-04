@@ -19,7 +19,7 @@ pipeline {
     stage('Code Analysis') {
       steps {
         withSonarQubeEnv('SonarCloud') {
-          sh "${scannerHome}/bin/sonar-scanner"
+          sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=reverse-angular -Dsonar.organization=revature-reverse-project"
         }
       }
     }
