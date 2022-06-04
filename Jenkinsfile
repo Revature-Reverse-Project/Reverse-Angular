@@ -17,11 +17,11 @@ pipeline {
     //     }
     // }
     stage('Code Analysis') {
-      steps {
-        withSonarQubeEnv('SonarCloud') {
-          sh "${scannerHome}/bin/sonar-scanner"
+        steps {
+            withSonarQubeEnv('SonarCloud') {
+                sh "${scannerHome}/bin/sonar-scanner"
+            }
         }
-      }
     }
     stage('Unit Testing') {
         when {
