@@ -7,7 +7,7 @@ pipeline {
   }
   agent any
   stages {
-    // stage('Install') {
+    //// stage('Install') {
     //     when {
     //         anyOf {branch 'ft_*'; branch 'bg_*'; branch 'master'}
     //     }
