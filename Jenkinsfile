@@ -5,17 +5,6 @@ pipeline {
     dockerImage = '' // TO UPDATE - Using Google Artifact Registry API
     scannerHome = tool 'SonarQubeScanner'
   }
-//       scannerHome = tool 'SonarQubeScanner'
-//     }
-//     agent any
-//       stages {
-//         stage('Code Analysis') {
-//           steps {
-//             withSonarQubeEnv('SonarCloud') {
-//               sh "${scannerHome}/bin/sonar-scanner"
-//             }
-//           }
-//         }
   agent any
   stages {
     // stage('Install') {
