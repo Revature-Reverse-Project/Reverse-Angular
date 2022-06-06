@@ -6,10 +6,27 @@ pipeline {
     REGISTRY_LOCATION = 'us-central1'
     REPOSITORY = 'project-3'
     PROJECT_ID = 'devopssre-346918'
+    scannerHome = tool 'SonarQubeScanner'
 
   }
   agent any
   stages {
+    // stage('Install') {
+    //     when {
+    //         anyOf {branch 'ft_*'; branch 'bg_*'; branch 'master'}
+    //     }
+    //     steps {
+    //         echo 'Install stage'
+    //         sh 'npm install --force'
+    //     }
+    // }
+    stage('Code Analysis') {
+      steps {
+        withSonarQubeEnv('SonarCloud') {
+          sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=reverse-angular -Dsonar.organization=revature-reverse-project"
+        }
+      }
+    }
     stage('Unit Testing') {
         when {
             anyOf {branch 'ft_*'; branch 'bg_*'}
@@ -39,15 +56,12 @@ pipeline {
     }
     stage('Docker Image') {
         when {
-            // branch 'master'
-            // branch 'ft_jenkins'
-            branch 'ft_*'
+            anyOf {branch 'ft_*'; branch 'master'}
         }
         steps{
             script {
                 echo 'Docker Image stage'
                 sh "docker build -t reverse-angular ."
-                // dockerImage = docker.build "$registry:$currentBuild.number"
             }
         }
     }
@@ -65,8 +79,6 @@ pipeline {
     }
     stage('Wait for approval') {
         when {
-            // branch 'master'
-            // branch 'ft_jenkins'
             anyOf {branch 'ft_*'; branch 'master'}
         }
         steps {
