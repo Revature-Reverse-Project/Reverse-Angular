@@ -3,7 +3,11 @@ pipeline {
     registry = '' // TO UPDATE - Using Google Artifact Registry API
     dockerHubCreds = 'docker_hub' // TO CHANGE - Using Google Artifact Registry API
     dockerImage = '' // TO UPDATE - Using Google Artifact Registry API
+    REGISTRY_LOCATION = 'us-central1'
+    REPOSITORY = 'project-3'
+    PROJECT_ID = 'devopssre-346918'
     scannerHome = tool 'SonarQubeScanner'
+
   }
   agent any
   stages {
@@ -36,54 +40,46 @@ pipeline {
             // junit skipPublishingChecks: true, testResults: 'target/surefire-reports/*.xml'
         }
     }
-    // stage('Build') {
-    //     when {
-    //         // branch 'master'
-    //         // branch 'ft_jenkins'
-    //         branch 'ft_*'
-    //     }
-    //     steps{
-    //         echo 'Build stage'
-    //         // TO UPDATE - NOT MAVEN
-    //         // withMaven {
-    //         //     sh 'mvn package -DskipTests'
-    //         // }
-    //     }
-    // }
-    stage('Docker Image') {
+    stage('Build') {
         when {
             // branch 'master'
             // branch 'ft_jenkins'
             branch 'ft_*'
         }
         steps{
+            echo 'Build stage'
+            // TO UPDATE - NOT MAVEN
+            // withMaven {
+            //     sh 'mvn package -DskipTests'
+            // }
+        }
+    }
+    stage('Docker Image') {
+        when {
+            anyOf {branch 'ft_*'; branch 'master'}
+        }
+        steps{
             script {
                 echo 'Docker Image stage'
-                // echo "$registry:$currentBuild.number"
-                // dockerImage = docker.build "$registry:$currentBuild.number"
+                sh "docker build -t reverse-angular ."
             }
         }
     }
     stage('Docker Deliver to Artifact Registry') {
         when {
-            // branch 'master'
-            // branch 'ft_jenkins'
-            branch 'ft_*'
+            anyOf {branch 'ft_*'; branch 'master'}
         }
         steps{
             script{
                 echo 'Docker Deliver to Artifact Registry stage'
-                // docker.withRegistry("", dockerHubCreds) {
-                //     dockerImage.push("$currentBuild.number")
-                //     dockerImage.push("latest")
+                 sh "docker tag reverse-angular ${REGISTRY_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/reverse-angular"
+                 sh "docker push ${REGISTRY_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/reverse-angular"
                 }
         }
     }
     stage('Wait for approval') {
         when {
-            // branch 'master'
-            // branch 'ft_jenkins'
-            branch 'ft_*'
+            anyOf {branch 'ft_*'; branch 'master'}
         }
         steps {
             script {
