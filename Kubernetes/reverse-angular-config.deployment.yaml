@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: reverse-angular-config
 data:
-  user_service_url: "http://user-service-service:8000"
-  post_service_url: "http://post-service-service:8000"
+  user_service_url: "http://user-service-service:90"
+  post_service_url: "http://post-service-service:80"
