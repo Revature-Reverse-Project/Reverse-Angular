@@ -22,9 +22,22 @@ pipeline {
             anyOf {branch 'ft_*'; branch 'bg_*'}
         }
         steps {
-            echo 'Unit Testing stage'
+            echo 'Testing stage'
             sh 'npm test'
-    
+        }
+    }
+    stage('Build') {
+        when {
+            // branch 'master'
+            // branch 'ft_jenkins'
+            branch 'ft_*'
+        }
+        steps{
+            echo 'Build stage'
+            // TO UPDATE - NOT MAVEN
+            // withMaven {
+            //     sh 'mvn package -DskipTests'
+            // }
         }
     }
     stage('Docker Image') {
