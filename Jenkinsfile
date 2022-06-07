@@ -1,8 +1,5 @@
 pipeline {
   environment {
-    registry = '' // TO UPDATE - Using Google Artifact Registry API
-    dockerHubCreds = 'docker_hub' // TO CHANGE - Using Google Artifact Registry API
-    dockerImage = '' // TO UPDATE - Using Google Artifact Registry API
     REGISTRY_LOCATION = 'us-central1'
     REPOSITORY = 'project-3'
     PROJECT_ID = 'devopssre-346918'
@@ -13,15 +10,6 @@ pipeline {
   }
   agent any
   stages {
-    // stage('Install') {
-    //     when {
-    //         anyOf {branch 'ft_*'; branch 'bg_*'; branch 'master'}
-    //     }
-    //     steps {
-    //         echo 'Install stage'
-    //         sh 'npm install --force'
-    //     }
-    // }
     stage('Code Analysis') {
       steps {
         withSonarQubeEnv('SonarCloud') {
@@ -35,25 +23,7 @@ pipeline {
         }
         steps {
             echo 'Unit Testing stage'
-            // TO UPDATE - NOT MAVEN, TESTING?
-            // withMaven {
-            //     sh 'mvn test'
-            // }
-            // junit skipPublishingChecks: true, testResults: 'target/surefire-reports/*.xml'
-        }
-    }
-    stage('Build') {
-        when {
-            // branch 'master'
-            // branch 'ft_jenkins'
-            branch 'ft_*'
-        }
-        steps{
-            echo 'Build stage'
-            // TO UPDATE - NOT MAVEN
-            // withMaven {
-            //     sh 'mvn package -DskipTests'
-            // }
+    
         }
     }
     stage('Docker Image') {
