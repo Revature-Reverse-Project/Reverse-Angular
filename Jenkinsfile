@@ -71,6 +71,9 @@ pipeline {
         }
     }
     stage ('Deploy to GKE') {
+        when {
+            anyOf {branch 'master'}
+        }
         steps {
             sh "sed -i 's|image: reverse-angular|image: ${REGISTRY_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/reverse-angular|g' Kubernetes/reverse-angular.deployment.yaml"
             step([$class: 'KubernetesEngineBuilder',
