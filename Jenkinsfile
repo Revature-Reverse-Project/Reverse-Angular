@@ -104,9 +104,9 @@ pipeline {
         steps {
             sh "sed -i 's|image: reverse-angular|image: ${REGISTRY_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/reverse-angular|g' Kubernetes/reverse-angular.deployment.yaml"
             step([$class: 'KubernetesEngineBuilder',
-                projectId: ${env.PROJECT_ID},
-                clusterName: ${env.CLUSTER_NAME},
-                location: ${env.REGISTRY_LOCATION},
+                projectId: env.PROJECT_ID,
+                clusterName: env.CLUSTER_NAME,
+                location: env.REGISTRY_LOCATION,
                 manifestPattern: 'Kubernetes',
                 credentialsId: env.CREDENTIALS_ID,
                 verifyDeployments: true])
