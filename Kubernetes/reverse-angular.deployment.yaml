@@ -19,7 +19,7 @@ spec:
       containers:
         - name: reverse-angular
           image: reverse-angular
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           livenessProbe:
