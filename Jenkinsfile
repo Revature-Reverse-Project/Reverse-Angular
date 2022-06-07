@@ -6,8 +6,10 @@ pipeline {
     REGISTRY_LOCATION = 'us-central1'
     REPOSITORY = 'project-3'
     PROJECT_ID = 'devopssre-346918'
+    CLUSTER_NAME = 'autopilot-cluster-1'
     scannerHome = tool 'SonarQubeScanner'
-
+    PROJECT_KEY = 'reverse-angular'
+    ORGANIZATION = 'revature-reverse-project'
   }
   agent any
   stages {
@@ -23,7 +25,7 @@ pipeline {
     stage('Code Analysis') {
       steps {
         withSonarQubeEnv('SonarCloud') {
-          sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=reverse-angular -Dsonar.organization=revature-reverse-project"
+          sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} -Dsonar.organization=${ORGANIZATION}"
         }
       }
     }
@@ -98,25 +100,16 @@ pipeline {
         }
         }
     }
-    stage('Deploy') {
-        when {
-            // branch 'master'
-            // branch 'ft_jenkins'
-            branch 'ft_*'
-        }
+    stage ('Deploy to GKE') {
         steps {
-            echo 'Deploy stage'
-            // sh 'sed -i "s/%TAG%/$BUILD_NUMBER/g" ./k8s/recipe-api.deployment.yaml'  // TO UPDATE
-            // step([$class: 'KubernetesEngineBuilder',
-            //     projectId: 'project2-350217',  // TO UPDATE
-            //     clusterName: 'my-first-cluster-1', // TO UPDATE
-            //     zone: 'us-central1-c', // TO CONFIRM
-            //     manifestPattern: 'k8s/', // TO CONFIRM
-            //     credentialsId: 'project2', // TO UPDATE
-            //     verifyDeployments: true
-            // ])
-
-            // cleanWs();
+            sh "sed -i 's|image: reverse-angular|image: ${REGISTRY_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/reverse-angular|g' Kubernetes/reverse-angular.deployment.yaml"
+            step([$class: 'KubernetesEngineBuilder',
+                projectId: ${PROJECT_ID},
+                clusterName: ${CLUSTER_NAME},
+                location: ${REGISTRY_LOCATION},
+                manifestPattern: 'Kubernetes',
+                credentialsId: env.CREDENTIALS_ID,
+                verifyDeployments: true])
         }
     }
   }
