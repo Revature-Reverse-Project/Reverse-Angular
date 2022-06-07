@@ -28,7 +28,7 @@ pipeline {
     }
     stage('Docker Image') {
         when {
-            anyOf {branch 'ft_*'; branch 'master'}
+            anyOf {branch 'master'}
         }
         steps{
             script {
@@ -39,7 +39,7 @@ pipeline {
     }
     stage('Docker Deliver to Artifact Registry') {
         when {
-            anyOf {branch 'ft_*'; branch 'master'}
+            anyOf {branch 'master'}
         }
         steps{
             script{
@@ -51,7 +51,7 @@ pipeline {
     }
     stage('Wait for approval') {
         when {
-            anyOf {branch 'ft_*'; branch 'master'}
+            anyOf {branch 'master'}
         }
         steps {
             script {
