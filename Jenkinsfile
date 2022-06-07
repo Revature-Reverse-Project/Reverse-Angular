@@ -3,20 +3,28 @@ pipeline {
     registry = '' // TO UPDATE - Using Google Artifact Registry API
     dockerHubCreds = 'docker_hub' // TO CHANGE - Using Google Artifact Registry API
     dockerImage = '' // TO UPDATE - Using Google Artifact Registry API
+    REGISTRY_LOCATION = 'us-central1'
+    REPOSITORY = 'project-3'
+    PROJECT_ID = 'devopssre-346918'
+    scannerHome = tool 'SonarQubeScanner'
+
   }
   agent any
   stages {
-    stage('Unit Testing') {
+    stage('Code Analysis') {
+      steps {
+        withSonarQubeEnv('SonarCloud') {
+          sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=reverse-angular -Dsonar.organization=revature-reverse-project"
+        }
+      }
+    }
+    stage('Testing') {
         when {
             anyOf {branch 'ft_*'; branch 'bg_*'}
         }
         steps {
-            echo 'Unit Testing stage'
-            // TO UPDATE - NOT MAVEN, TESTING?
-            // withMaven {
-            //     sh 'mvn test'
-            // }
-            // junit skipPublishingChecks: true, testResults: 'target/surefire-reports/*.xml'
+            echo 'Testing stage'
+            sh 'ng test'
         }
     }
     stage('Build') {
@@ -35,38 +43,30 @@ pipeline {
     }
     stage('Docker Image') {
         when {
-            // branch 'master'
-            // branch 'ft_jenkins'
-            branch 'ft_*'
+            anyOf {branch 'ft_*'; branch 'master'}
         }
         steps{
             script {
                 echo 'Docker Image stage'
-                //sh "docker build -t project3 ."
-                // dockerImage = docker.build "$registry:$currentBuild.number"
+                sh "docker build -t reverse-angular ."
             }
         }
     }
     stage('Docker Deliver to Artifact Registry') {
         when {
-            // branch 'master'
-            // branch 'ft_jenkins'
-            branch 'ft_*'
+            anyOf {branch 'ft_*'; branch 'master'}
         }
         steps{
             script{
                 echo 'Docker Deliver to Artifact Registry stage'
-                 sh "docker tag project3 us-central1-docker.pkg.dev/devopssre-346918/project-3/project3"
-                 sh "docker push us-central1-docker.pkg.dev/devopssre-346918/project-3/project3"
-                //     dockerImage.push("latest")
+                 sh "docker tag reverse-angular ${REGISTRY_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/reverse-angular"
+                 sh "docker push ${REGISTRY_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/reverse-angular"
                 }
         }
     }
     stage('Wait for approval') {
         when {
-            // branch 'master'
-            // branch 'ft_jenkins'
-            branch 'ft_*'
+            anyOf {branch 'ft_*'; branch 'master'}
         }
         steps {
             script {
