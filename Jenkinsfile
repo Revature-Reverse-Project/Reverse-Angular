@@ -23,7 +23,7 @@ pipeline {
         }
         steps {
             echo 'Unit Testing stage'
-    
+
         }
     }
     stage('Docker Image') {
@@ -87,4 +87,3 @@ pipeline {
     }
   }
 }
-
