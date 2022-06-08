@@ -5,7 +5,7 @@ pipeline {
     PROJECT_ID = 'devopssre-346918'
     CLUSTER_NAME = 'autopilot-cluster-1'
     scannerHome = tool 'SonarQubeScanner'
-    PROJECT_KEY = 'reverse-angular'
+    PROJECT_KEY = 'Reverse-Angular'
     ORGANIZATION = 'revature-reverse-project'
   }
   agent any
